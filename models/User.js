@@ -1,25 +1,32 @@
 const { Schema, model } = require('mongoose');
-const reactionSchema = require('./Reaction');
+
 
 // Schema to create User model
 const userSchema = new Schema(
   {
-    first: {
+    username: {
       type: String,
       required: true,
       max_length: 50,
     },
-    last: {
+    email: {
       type: String,
       required: true,
       max_length: 50,
     },
-    github: {
-      type: String,
-      required: true,
-      max_length: 50,
-    },
-    reactions: [reactionSchema],
+     
+    thoughts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'thought',
+      },
+    ],
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'user',
+      },
+    ],
   },
   {
     toJSON: {
