@@ -14,12 +14,12 @@ const grade = async (userId) =>
     // only include the given user by using $match
     { $match: { _id: new ObjectId(userId) } },
     {
-      $unwind: '$assignments',
+      $unwind: '$reactions',
     },
     {
       $group: {
         _id: new ObjectId(userId),
-        overallGrade: { $avg: '$assignments.score' },
+        overallGrade: { $avg: '$reactions.score' },
       },
     },
   ]);
@@ -97,15 +97,15 @@ module.exports = {
     }
   },
 
-  // Add an assignment to a user
-  async addAssignment(req, res) {
-    console.log('You are adding an assignment');
+  // Add an reaction to a user
+  async addReaction(req, res) {
+    console.log('You are adding an reaction');
     console.log(req.body);
 
     try {
       const user = await User.findOneAndUpdate(
         { _id: req.params.userId },
-        { $addToSet: { assignments: req.body } },
+        { $addToSet: { reactions: req.body } },
         { runValidators: true, new: true }
       );
 
@@ -120,12 +120,12 @@ module.exports = {
       res.status(500).json(err);
     }
   },
-  // Remove assignment from a user
-  async removeAssignment(req, res) {
+  // Remove reaction from a user
+  async removeReaction(req, res) {
     try {
       const user = await User.findOneAndUpdate(
         { _id: req.params.userId },
-        { $pull: { assignment: { assignmentId: req.params.assignmentId } } },
+        { $pull: { reaction: { reactionId: req.params.reactionId } } },
         { runValidators: true, new: true }
       );
 
